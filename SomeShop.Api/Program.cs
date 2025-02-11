@@ -1,3 +1,4 @@
+using SomeShop.Application;
 using SomeShop.Application.Services;
 using SomeShop.Domain.Interfaces;
 using SomeShop.Infrastructure;
@@ -6,9 +7,7 @@ using SomeShop.Infrastructure.Repositories;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddInfrastructure(builder.Configuration);
-
-builder.Services.AddScoped<IProductService, ProductService>();
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddApplication(builder.Configuration);
 
 builder.Services.AddControllers();
 
