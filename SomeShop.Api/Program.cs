@@ -1,8 +1,5 @@
 using SomeShop.Application;
-using SomeShop.Application.Services;
-using SomeShop.Domain.Interfaces;
 using SomeShop.Infrastructure;
-using SomeShop.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
