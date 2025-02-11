@@ -1,10 +1,11 @@
-﻿using SomeShop.Application.Services;
-using SomeShop.Domain.Interfaces;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
-using SomeShop.Application.Validators;
+﻿using FluentValidation;
 using FluentValidation.AspNetCore;
-using FluentValidation;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using SomeShop.Application.Interfaces;
+using SomeShop.Application.Services;
+using SomeShop.Application.Validators;
+using SomeShop.Domain.Interfaces;
 
 namespace SomeShop.Application
 {
@@ -16,6 +17,8 @@ namespace SomeShop.Application
 
             services.AddFluentValidationAutoValidation();
             services.AddValidatorsFromAssemblyContaining<ProductValidator>();
+
+            services.AddSingleton<IJwtTokenService, JwtTokenService>();
 
             return services;
         }
