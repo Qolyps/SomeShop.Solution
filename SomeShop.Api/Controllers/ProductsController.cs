@@ -1,11 +1,13 @@
 ﻿using System.Runtime.CompilerServices;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SomeShop.Domain.Entities;
 using SomeShop.Domain.Interfaces;
 
 namespace SomeShop.Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/product")]
     public class ProductsController : ControllerBase
