@@ -26,7 +26,7 @@ namespace SomeShop.Application.Services
             return await _productRepository.Update(id, name, description, price);
         }
 
-        public async Task<Guid> DeleteTask(Guid id)
+        public async Task<Guid> DeleteProduct(Guid id)
         {
             return await _productRepository.Delete(id);
         }
