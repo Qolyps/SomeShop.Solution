@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using SomeShop.Domain.Entities;
 using SomeShop.Domain.Interfaces;
 using SomeShop.Infrastructure.Persistence;
@@ -14,50 +15,38 @@ namespace SomeShop.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<List<Product>> Get()
+        public async Task<List<Product>> GetAllAsync()
         {
-            var product = await _context.Products
+            return await _context.Products
                 .AsNoTracking()
                 .ToListAsync();
-
-            return product;
         }
 
-        public async Task<Guid> Create(Product product)
+        public async Task<Product?> GetByIdAsync(Guid id)
         {
-            var products = new Product
-            {
-                Id = product.Id,
-                Name = product.Name,
-                Description = product.Description,
-                Price = product.Price,
-            };
+            return await _context.Products.FindAsync(id);
+        }
 
-            await _context.Products.AddAsync(product);
+        public async Task CreateAsync(Product product)
+        {
+            _context.Products.Add(product);
             await _context.SaveChangesAsync();
-
-            return product.Id;
         }
 
-        public async Task<Guid> Update(Guid id, string name, string description, decimal price)
+        public async Task UpdateAsync(Product product)
         {
-            await _context.Products
-                .Where(p => p.Id == id)
-                .ExecuteUpdateAsync(s => s
-                    .SetProperty(p => p.Name, p => name)
-                    .SetProperty(p => p.Description, p => description)
-                    .SetProperty(p => p.Price, p => price));
-
-            return id;
+            _context.Products.Update(product);
+            await _context.SaveChangesAsync();
         }
 
-        public async Task<Guid> Delete(Guid id)
+        public async Task DeleteAsync(Guid id)
         {
-            await _context.Products
-                .Where(p => p.Id == id)
-                .ExecuteDeleteAsync();
-
-            return id;
+            var product = await _context.Products.FindAsync(id);
+            if (product != null)
+            {
+                _context.Products.Remove(product);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

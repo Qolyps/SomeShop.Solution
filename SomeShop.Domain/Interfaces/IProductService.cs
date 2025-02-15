@@ -4,9 +4,10 @@ namespace SomeShop.Domain.Interfaces
 {
     public interface IProductService
     {
-        Task<List<Product>> GetAllProduct();
-        Task<Guid> CreateProduct(Product product);
-        Task<Guid> UpdateProduct(Guid id, string name, string description, decimal price);
-        Task<Guid> DeleteProduct(Guid id);
+        Task<List<Product>> GetAllProductsAsync();
+        Task<Product?> GetProductByIdAsync(Guid id);
+        Task CreateProductAsync(Product product);
+        Task UpdateProductAsync(Product product);
+        Task DeleteProductAsync(Guid id);
     }
 }
