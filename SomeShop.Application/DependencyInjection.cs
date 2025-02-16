@@ -17,6 +17,7 @@ namespace SomeShop.Application
 
             services.AddFluentValidationAutoValidation();
             services.AddValidatorsFromAssemblyContaining<ProductValidator>();
+            services.AddValidatorsFromAssemblyContaining<ProductDtoValidator>();
 
             services.AddSingleton<IJwtTokenService, JwtTokenService>();
 

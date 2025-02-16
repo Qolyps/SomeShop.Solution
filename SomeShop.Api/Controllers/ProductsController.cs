@@ -2,6 +2,7 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SomeShop.Application.DTO;
 using SomeShop.Domain.Entities;
 using SomeShop.Domain.Interfaces;
 
@@ -14,11 +15,13 @@ namespace SomeShop.Api.Controllers
     {
         private readonly IProductService _productService;
         private readonly IValidator<Product> _productValidator;
+        private readonly IValidator<ProductDto> _productDtoValidator;
 
-        public ProductsController(IProductService productService, IValidator<Product> productValidator)
+        public ProductsController(IProductService productService, IValidator<Product> productValidator, IValidator<ProductDto> productDtoValidator)
         {
             _productService = productService;
             _productValidator = productValidator;
+            _productDtoValidator = productDtoValidator;
         }
 
         [HttpGet]
@@ -37,30 +40,43 @@ namespace SomeShop.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateProduct([FromBody] Product product)
+        public async Task<ActionResult> CreateProduct([FromBody] ProductDto productDtoValidator)
         {
-            var validationResult = await _productValidator.ValidateAsync(product);
+            var validationResult = await _productDtoValidator.ValidateAsync(productDtoValidator);
 
             if (!validationResult.IsValid)
             {
                 return BadRequest(validationResult.Errors);
             }
+
+            var product = new Product   
+            {
+                Id = Guid.NewGuid(),
+                Name = productDtoValidator.Name,
+                Price = productDtoValidator.Price
+            };
 
             await _productService.CreateProductAsync(product);
             return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product);
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> UpdateProduct(Guid id, [FromBody] Product updatedProduct)
+        public async Task<IActionResult> UpdateProduct(Guid id, [FromBody] ProductDto productDtoValidator)
         {
-            var validationResult = await _productValidator.ValidateAsync(updatedProduct);
-
+            var validationResult = await _productDtoValidator.ValidateAsync(productDtoValidator);
             if (!validationResult.IsValid)
             {
                 return BadRequest(validationResult.Errors);
             }
 
-            await _productService.UpdateProductAsync(updatedProduct);
+            var product = new Product
+            {
+                Id = id,
+                Name = productDtoValidator.Name,
+                Price = productDtoValidator.Price
+            };
+
+            await _productService.UpdateProductAsync(product);
             return NoContent();
         }
 
